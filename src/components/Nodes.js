@@ -1,5 +1,6 @@
-export default function Nodes({ $app, initialState }) {
+export default function Nodes({ $app, initialState, onClick }) {
   this.state = initialState;
+  this.onClick = onClick;
   this.$target = document.createElement('div');
   this.$target.className = 'Nodes';
   $app.appendChild(this.$target);
@@ -13,7 +14,7 @@ export default function Nodes({ $app, initialState }) {
     const nodeTemplate = this.state.nodes
       .map((node) => {
         return `
-      <div class="Node">
+        <div class="Node" data-node-id='${node.id}'>
           <img src="./assets/${node.type.toLowerCase()}.png" />
           <div>${node.name}</div>
         </div>
@@ -28,5 +29,13 @@ export default function Nodes({ $app, initialState }) {
   </div>
   ${nodeTemplate}`;
   };
+  this.$target.addEventListener('click', (e) => {
+    const $node = e.target.closest('.Node');
+    const nodeId = $node.dataset.nodeId;
+    const selectedNode = this.state.nodes.find((node) => node.id === nodeId);
+    if (selectedNode) {
+      this.onClick(selectedNode);
+    }
+  });
   this.render();
 }
