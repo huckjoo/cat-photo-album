@@ -1,6 +1,7 @@
-export default function Nodes({ $app, initialState, onClick }) {
+export default function Nodes({ $app, initialState, onClick, onBackClick }) {
   this.state = initialState;
   this.onClick = onClick;
+  this.onBackClick = onBackClick;
   this.$target = document.createElement('div');
   this.$target.className = 'Nodes';
   $app.appendChild(this.$target);
@@ -32,6 +33,9 @@ export default function Nodes({ $app, initialState, onClick }) {
   this.$target.addEventListener('click', (e) => {
     const $node = e.target.closest('.Node');
     const nodeId = $node.dataset.nodeId;
+    if (!nodeId) {
+      this.onBackClick();
+    }
     const selectedNode = this.state.nodes.find((node) => node.id === nodeId);
     if (selectedNode) {
       this.onClick(selectedNode);
