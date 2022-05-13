@@ -12,7 +12,7 @@ export default function Breadcrumb({ $app, initialState }) {
   this.render = () => {
     this.$target.innerHTML =
       '<div>root</div>' +
-      this.state.depth
+      this.state
         .map((node) => {
           return `
       <div>${node.name}</div>

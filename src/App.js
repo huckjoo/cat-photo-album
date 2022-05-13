@@ -9,10 +9,10 @@ export default function App($app) {
     nodes: [],
     filePath: null,
   };
-  const breadcrumb = new Breadcrumb({ $app, initialState: this.state });
+  const breadcrumb = new Breadcrumb({ $app, initialState: this.state.depth });
   const nodes = new Nodes({
     $app,
-    initialState: this.state,
+    initialState: { isRoot: this.state.isRoot, nodes: this.state.nodes },
     onClick: async (selectedNode) => {
       console.log('clicked!');
       // const $node = e.target.closest('.Node');
@@ -30,7 +30,7 @@ export default function App($app) {
   });
   const imageView = new ImageView({
     $app,
-    initialState: this.state,
+    initialState: this.state.filePath,
     onClick: (e) => {
       if (e.target.nodeName !== 'IMG') {
         this.setState({ ...this.state, filePath: null });
@@ -39,9 +39,9 @@ export default function App($app) {
   });
   this.setState = (nextState) => {
     this.state = nextState;
-    nodes.setState({ ...this.state });
-    breadcrumb.setState({ ...this.state });
-    imageView.setState({ ...this.state });
+    nodes.setState({ isRoot: this.state.isRoot, nodes: this.state.nodes });
+    breadcrumb.setState(this.state.depth);
+    imageView.setState(this.state.filePath);
   };
   const init = async () => {
     const rootNodes = await request();

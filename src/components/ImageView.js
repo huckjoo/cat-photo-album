@@ -11,14 +11,15 @@ export default function ImageView({ $app, initialState, onClick }) {
   };
 
   this.render = () => {
-    this.$target.innerHTML = this.state.filePath
+    console.log(this.state, 'this.state');
+    this.$target.innerHTML = this.state
       ? `
     <div class="content">
     <img src="https://fe-dev-matching-2021-03-serverlessdeploymentbuck-t3kpj3way537.s3.ap-northeast-2.amazonaws.com/public${this.state.filePath}">
   </div>
     `
       : '';
-    this.$target.style.display = this.state.filePath ? 'block' : 'none';
+    this.$target.style.display = this.state ? 'block' : 'none';
     this.$target.addEventListener('click', onClick);
   };
   this.render();
