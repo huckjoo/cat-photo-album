@@ -30,17 +30,17 @@ export default function Nodes({ $app, initialState, onClick, onBackClick }) {
     </div>
     ${nodeTemplate}
     `;
-    this.$target.addEventListener('click', (e) => {
-      const $node = e.target.closest('.Node');
-      const selectedId = $node.dataset.id;
-      if (!selectedId) {
-        this.onBackClick();
-      }
-      const selectedNode = this.state.nodes.find((node) => node.id === selectedId);
-      if (selectedNode) {
-        this.onClick(selectedNode);
-      }
-    });
   };
+  this.$target.addEventListener('click', (e) => {
+    const $node = e.target.closest('.Node');
+    const selectedId = $node.dataset.id;
+    if (!selectedId) {
+      this.onBackClick();
+    }
+    const selectedNode = this.state.nodes.find((node) => node.id === selectedId);
+    if (selectedNode) {
+      this.onClick(selectedNode);
+    }
+  });
   this.render();
 }

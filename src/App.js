@@ -14,10 +14,6 @@ export default function App($app) {
     $app,
     initialState: { isRoot: this.state.isRoot, nodes: this.state.nodes },
     onClick: async (selectedNode) => {
-      console.log('clicked!');
-      // const $node = e.target.closest('.Node');
-      // const selectedId = $node.dataset.id;
-      // const selectedNode = this.state.nodes.find((node) => node.id === selectedId);
       if (selectedNode.type === 'DIRECTORY') {
         // 폴더일 경우
         const nextNodes = await request(selectedNode.id);
@@ -25,6 +21,16 @@ export default function App($app) {
       } else if (selectedNode.type === 'FILE') {
         // 파일일 경우
         this.setState({ ...this.state, filePath: selectedNode.filePath });
+      }
+    },
+    onBackClick: async () => {
+      const prevState = { ...this.state };
+      prevState.depth.pop();
+      if (prevState.depth.length > 0) {
+        const prevNodeId = prevState.depth[prevState.depth.length - 1].id;
+        this.setState({ ...prevState, nodes: await request(prevNodeId), isRoot: false });
+      } else {
+        this.setState({ ...prevState, nodes: await request(), isRoot: true });
       }
     },
   });

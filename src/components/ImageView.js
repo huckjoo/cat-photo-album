@@ -15,7 +15,7 @@ export default function ImageView({ $app, initialState, onClick }) {
     this.$target.innerHTML = this.state
       ? `
     <div class="content">
-    <img src="https://fe-dev-matching-2021-03-serverlessdeploymentbuck-t3kpj3way537.s3.ap-northeast-2.amazonaws.com/public${this.state.filePath}">
+    <img src="https://fe-dev-matching-2021-03-serverlessdeploymentbuck-t3kpj3way537.s3.ap-northeast-2.amazonaws.com/public${this.state}">
   </div>
     `
       : '';
