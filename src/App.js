@@ -13,14 +13,14 @@ export default function App($app) {
   const nodes = new Nodes({
     $app,
     initialState: this.state,
-    onClick: async (e) => {
+    onClick: async (selectedNode) => {
       console.log('clicked!');
-      const $node = e.target.closest('.Node');
-      const selectedId = $node.dataset.id;
-      const selectedNode = this.state.nodes.find((node) => node.id === selectedId);
+      // const $node = e.target.closest('.Node');
+      // const selectedId = $node.dataset.id;
+      // const selectedNode = this.state.nodes.find((node) => node.id === selectedId);
       if (selectedNode.type === 'DIRECTORY') {
         // 폴더일 경우
-        const nextNodes = await request(selectedId);
+        const nextNodes = await request(selectedNode.id);
         this.setState({ ...this.state, depth: [...this.state.depth, selectedNode], nodes: nextNodes, isRoot: false });
       } else if (selectedNode.type === 'FILE') {
         // 파일일 경우
