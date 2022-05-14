@@ -28,10 +28,9 @@ export default function App($app) {
         const nextNodes = await request(node.id);
         this.setState({ ...this.state, isRoot: false, nodes: nextNodes, depth: [...this.state.depth, node] });
       } else if (node.type === 'FILE') {
-        // file 관련 처리
         imageView.setState({
           ...this.state,
-          selectedFilePath: node.filePath, // ...this.state하면 무슨일이 벌어질까??
+          selectedFilePath: node.filePath,
         });
       }
     },
