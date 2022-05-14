@@ -14,7 +14,25 @@ export default function App($app) {
     selectedFilePath: null,
     isLoading: false,
   };
-  const breadcrumb = new Breadcrumb({ $app, initialState: this.state.depth });
+  const breadcrumb = new Breadcrumb({
+    $app,
+    initialState: this.state.depth,
+    onClick: (idx) => {
+      console.log(idx, 'idx');
+      if (idx === null) {
+        // root
+        this.setState({ ...this.state, isRoot: true, nodes: cache['root'], depth: [] });
+        return;
+      }
+      if (idx === this.state.depth.length - 1) {
+        return;
+      }
+      const nextState = { ...this.state };
+      const nextDepth = this.state.depth.slice(0, idx + 1);
+      console.log(nextDepth, 'nextDepth');
+      this.setState({ ...nextState, isRoot: false, nodes: cache[nextDepth[nextDepth.length - 1].id], depth: nextDepth });
+    },
+  });
   const loading = new Loading({ $app, initialState: this.state.isLoading });
   const imageView = new ImageView({
     $app,
