@@ -4,6 +4,8 @@ import ImageView from './components/ImageView.js';
 import Nodes from './components/Nodes.js';
 import Loading from './components/Loading.js';
 
+const cache = {};
+
 export default function App($app) {
   this.state = {
     isRoot: false,
@@ -28,9 +30,14 @@ export default function App($app) {
     initialState: { isRoot: this.state.isRoot, nodes: this.state.nodes },
     onClick: async (node) => {
       if (node.type === 'DIRECTORY') {
-        this.setState({ ...this.state, isLoading: true });
-        const nextNodes = await request(node.id);
-        this.setState({ ...this.state, isRoot: false, nodes: nextNodes, depth: [...this.state.depth, node], isLoading: false });
+        if (cache[node.id]) {
+          this.setState({ ...this.state, isRoot: false, nodes: cache[node.id], depth: [...this.state.depth, node], isLoading: false });
+        } else {
+          this.setState({ ...this.state, isLoading: true });
+          const nextNodes = await request(node.id);
+          this.setState({ ...this.state, isRoot: false, nodes: nextNodes, depth: [...this.state.depth, node], isLoading: false });
+          cache[node.id] = nextNodes;
+        }
       } else if (node.type === 'FILE') {
         imageView.setState({
           ...this.state,
@@ -43,13 +50,19 @@ export default function App($app) {
         const nextState = { ...this.state };
         nextState.depth.pop();
         const prevNodeId = nextState.depth.length ? nextState.depth[nextState.depth.length - 1].id : null;
-        this.setState({ ...this.state, isLoading: true });
-        this.setState({
-          ...nextState,
-          isRoot: !prevNodeId,
-          nodes: await request(prevNodeId),
-        });
-        this.setState({ ...this.state, isLoading: false });
+        if (prevNodeId === null) {
+          this.setState({
+            ...nextState,
+            isRoot: true,
+            nodes: cache['root'],
+          });
+        } else {
+          this.setState({
+            ...nextState,
+            isRoot: !prevNodeId,
+            nodes: cache[prevNodeId],
+          });
+        }
       } catch (e) {
         throw new Error(e.message);
       }
@@ -79,6 +92,7 @@ export default function App($app) {
         isRoot: true,
         nodes: rootNodes,
       });
+      cache.root = rootNodes;
     } catch (e) {
       throw new Error(`시작중 오류 ${e.message}`);
     }
